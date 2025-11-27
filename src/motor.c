@@ -13,6 +13,12 @@
 //-------------------------------------
 //  DEFINIZIONE VARIABILI GLOBALI
 //-------------------------------------
+/*
+ static nel motor.c serve a incapsulare la variabile
+ così che è  “privata” per questo modolo modulo.
+ Significa che ha linkaggio interno ed è visibile solo qui.
+ Nessun file può accedere anche se nel motor.h uso `extern`
+*/
 static struct   motor_param         pmot;
 static struct   controller_param    pcon = {gain: GAIN, wz: WZERO, wp: WPOLO};
 static struct   control_law         eqn;

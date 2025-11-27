@@ -9,7 +9,15 @@
 #include <unistd.h>
 #include "mypthlib.h"
 
-
+//-------------------------------------
+//  DEFINIZIONE VARIABILI GLOBALI
+//-------------------------------------
+/*
+ static nel mypthlib.c serve a incapsulare la variabile
+ così che è  “privata” per questo modolo modulo.
+ Significa che ha linkaggio interno ed è visibile solo qui.
+ Nessun file può accedere anche se nel mypthlib.h uso `extern`
+*/
 static struct       task_param tp[NTASK];
 static pthread_t    tid[NTASK];
 // used for time analysis
