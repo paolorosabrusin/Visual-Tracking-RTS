@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <string.h>
+#include <errno.h>
 #include <sched.h>
 #include <time.h>
 #include <unistd.h>
@@ -165,7 +167,21 @@ int     task_create(int i, void *(*body)(void*), int per, int dln, int prio){
     pthread_attr_setschedparam(&myatt, &mypar);
     
     tret = pthread_create(&tid[i], &myatt, body, (void*)(&tp[i]));
-    if(tret != 0) printf("errore nella creazione del thread %d\n", i);
+    if(tret != 0) {
+        /* print a more informative error message */
+        printf("errore nella creazione del thread %d: %s\n", i, strerror(tret));
+        /* fallback: try creating the thread without realtime attributes (may avoid EPERM) */
+        if (tret == EPERM) {
+            printf("tentativo di creazione senza attributi realtime per il thread %d\n", i);
+            /* try default creation without touching myatt */
+            tret = pthread_create(&tid[i], NULL, body, (void*)(&tp[i]));
+            if (tret != 0) {
+                printf("fallback: errore nella creazione del thread %d: %s\n", i, strerror(tret));
+            } else {
+                printf("thread %d creato senza attributi realtime\n", i);
+            }
+        }
+    }
 
     pthread_attr_destroy(&myatt);
     

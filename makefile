@@ -1,23 +1,35 @@
-MAIN = main
+# Makefile per struttura: src/ include/ obj/ bin/
+CC := gcc
 
-CC = gcc
+SRC_DIR := src
+INCLUDE_DIR := include
+OBJ_DIR := obj
+BIN_DIR := bin
 
-CFLAGS = -Wall -lpthread -lrt -lm `allegro-config --libs`
+ALLEGRO_CFLAGS := $(shell allegro-config --cflags)
+ALLEGRO_LIBS   := $(shell allegro-config --libs)
 
-$(MAIN): $(MAIN).o mypthlib.o flyrand.o motor.o
-	$(CC) -o $(MAIN) $(MAIN).o mypthlib.o flyrand.o motor.o $(CFLAGS)
+CFLAGS := -Wall -I$(INCLUDE_DIR) $(ALLEGRO_CFLAGS)
+LIBS   := -lpthread -lrt -lm $(ALLEGRO_LIBS)
 
-$(MAIN).o: $(MAIN).c 
-	$(CC) -c $(MAIN).c 
+SRCS := $(wildcard $(SRC_DIR)/*.c)
+OBJS := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
-mypthlib.o: mypthlib.c 
-	$(CC) -c mypthlib.c 
-	
-flyrand.o: flyrand.c 
-	$(CC) -c flyrand.c
+TARGET := $(BIN_DIR)/main
 
-motor.o: motor.c 
-	$(CC) -c motor.c
+.PHONY: all clean dirs
+
+all: dirs $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) -o $@ $(OBJS) $(LIBS)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | dirs
+	$(CC) $(CFLAGS) -c $< -o $@
+
+dirs:
+	mkdir -p $(OBJ_DIR) $(BIN_DIR)
 
 clean:
-	rm -rf *o $(MAIN)
+	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/*
+
