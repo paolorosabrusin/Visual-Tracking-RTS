@@ -1,4 +1,6 @@
 # Visual-Tracking-RTS
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 Progettino dell'esame di Real Time System
 
 # Dependencies
@@ -23,3 +25,6 @@ il `main` va quindi lanciato con permessi root:
 ```sh
 sudo ./bin/main
 ```
+
+# Licenza
+Questo progetto è distribuito sotto licenza GNU General Public License v3.0 - consulta il file [LICENSE](LICENSE) per i dettagli.
